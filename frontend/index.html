@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Configurator</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Insurance Configurator</h1>
+        </header>
+        <main>
+            <section>
+                <h2>Parameters</h2>
+                <form id="parameter-form">
+                    <input type="text" id="param-name" placeholder="Name" required>
+                    <input type="text" id="param-type" placeholder="Type" required>
+                    <input type="text" id="param-default" placeholder="Default Value">
+                    <button type="submit">Create Parameter</button>
+                </form>
+                <ul id="parameters-list"></ul>
+            </section>
+
+            <section>
+                <h2>Relationships</h2>
+                <form id="relationship-form">
+                    <input type="text" id="rel-type" placeholder="Type" required>
+                    <input type="text" id="rel-params" placeholder="Parameter IDs (comma-separated)" required>
+                    <button type="submit">Create Relationship</button>
+                </form>
+                <ul id="relationships-list"></ul>
+            </section>
+
+            <section>
+                <h2>Partners</h2>
+                <form id="partner-form">
+                    <input type="text" id="partner-name" placeholder="Name" required>
+                    <input type="text" id="partner-params" placeholder="Parameter IDs (comma-separated)">
+                    <button type="submit">Create Partner</button>
+                </form>
+                <ul id="partners-list"></ul>
+            </section>
+        </main>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+</html>

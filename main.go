@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -57,6 +58,24 @@ func GetParameters(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
+func UpdateParameter(db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var parameter Parameter
+		json.NewDecoder(r.Body).Decode(&parameter)
+		db.Save(&parameter)
+		json.NewEncoder(w).Encode(&parameter)
+	}
+}
+
+func DeleteParameter(db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var parameter Parameter
+		json.NewDecoder(r.Body).Decode(&parameter)
+		db.Delete(&parameter)
+		json.NewEncoder(w).Encode("Parameter deleted")
+	}
+}
+
 func CreateRelationship(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var relationship Relationship
@@ -71,6 +90,24 @@ func GetRelationships(db *gorm.DB) http.HandlerFunc {
 		var relationships []Relationship
 		db.Preload("Parameters").Find(&relationships)
 		json.NewEncoder(w).Encode(&relationships)
+	}
+}
+
+func UpdateRelationship(db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var relationship Relationship
+		json.NewDecoder(r.Body).Decode(&relationship)
+		db.Save(&relationship)
+		json.NewEncoder(w).Encode(&relationship)
+	}
+}
+
+func DeleteRelationship(db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var relationship Relationship
+		json.NewDecoder(r.Body).Decode(&relationship)
+		db.Delete(&relationship)
+		json.NewEncoder(w).Encode("Relationship deleted")
 	}
 }
 
@@ -91,16 +128,71 @@ func GetPartners(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
+func UpdatePartner(db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var partner Partner
+		json.NewDecoder(r.Body).Decode(&partner)
+		db.Save(&partner)
+		json.NewEncoder(w).Encode(&partner)
+	}
+}
+
+func DeletePartner(db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var partner Partner
+		json.NewDecoder(r.Body).Decode(&partner)
+		db.Delete(&partner)
+		json.NewEncoder(w).Encode("Partner deleted")
+	}
+}
+
+func SeedData(db *gorm.DB) {
+	parameters := []Parameter{
+		{Name: "Coverage Amount", Type: "number", DefaultValue: "10000"},
+		{Name: "Policy Term", Type: "number", DefaultValue: "12"},
+		{Name: "Premium", Type: "number", DefaultValue: "200"},
+	}
+	db.Create(&parameters)
+
+	relationships := []Relationship{
+		{Type: "one-to-many", Parameters: parameters[:2]},
+		{Type: "many-to-one", Parameters: parameters[1:]},
+	}
+	db.Create(&relationships)
+
+	partners := []Partner{
+		{Name: "Partner A", Parameters: parameters[:2]},
+		{Name: "Partner B", Parameters: parameters[1:]},
+	}
+	db.Create(&partners)
+}
+
 func main() {
 	router := mux.NewRouter()
 	db := InitDB()
+	SeedData(db)
 
-	router.HandleFunc("/parameters", CreateParameter(db)).Methods("POST")
-	router.HandleFunc("/parameters", GetParameters(db)).Methods("GET")
-	router.HandleFunc("/relationships", CreateRelationship(db)).Methods("POST")
-	router.HandleFunc("/relationships", GetRelationships(db)).Methods("GET")
-	router.HandleFunc("/partners", CreatePartner(db)).Methods("POST")
-	router.HandleFunc("/partners", GetPartners(db)).Methods("GET")
+	apiRouter := router.PathPrefix("/api").Subrouter()
+	apiRouter.HandleFunc("/parameters", CreateParameter(db)).Methods("POST")
+	apiRouter.HandleFunc("/parameters", GetParameters(db)).Methods("GET")
+	apiRouter.HandleFunc("/parameters", UpdateParameter(db)).Methods("PUT")
+	apiRouter.HandleFunc("/parameters", DeleteParameter(db)).Methods("DELETE")
 
+	apiRouter.HandleFunc("/relationships", CreateRelationship(db)).Methods("POST")
+	apiRouter.HandleFunc("/relationships", GetRelationships(db)).Methods("GET")
+	apiRouter.HandleFunc("/relationships", UpdateRelationship(db)).Methods("PUT")
+	apiRouter.HandleFunc("/relationships", DeleteRelationship(db)).Methods("DELETE")
+
+	apiRouter.HandleFunc("/partners", CreatePartner(db)).Methods("POST")
+	apiRouter.HandleFunc("/partners", GetPartners(db)).Methods("GET")
+	apiRouter.HandleFunc("/partners", UpdatePartner(db)).Methods("PUT")
+	apiRouter.HandleFunc("/partners", DeletePartner(db)).Methods("DELETE")
+
+	// Обработка статических файлов
+	staticDir := http.Dir("./frontend/")
+	fs := http.FileServer(staticDir)
+	router.PathPrefix("/").Handler(fs)
+
+	log.Println("Server is running on http://localhost:8000")
 	http.ListenAndServe(":8000", router)
 }
