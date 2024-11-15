@@ -40,3 +40,6 @@ type Health struct {
 	Licence      []string `gorm:"many"`
 	Registration string   `gorm:"many"`
 }
+
+type NewProduct struct {
+}
