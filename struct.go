@@ -1,8 +1,4 @@
-package main
-
-func main() {
-
-}
+package entity
 
 type Person_data struct {
 	ID           uint     `gorm:"primaryKey"`
@@ -42,4 +38,12 @@ type Health struct {
 }
 
 type NewProduct struct {
+	ID            uint              `grom:"primaryKey"`
+	ProductName   string            `gorm:"not null"`
+	Product_param map[string]string `gorn:"not null"`
+}
+
+type AllUserProducts struct {
+	productsPatterns []NewProduct `grom:"productsPatterns"`
+	products         []NewProduct `grom:"products"`
 }
