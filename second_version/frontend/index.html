@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Product Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Insurance Product Management</h1>
+    </header>
+
+    <main>
+        <section id="parameters">
+            <h2>Parameters</h2>
+            <form id="createParameterForm">
+                <input type="text" name="name" placeholder="Name" required>
+                <input type="text" name="type" placeholder="Type" required>
+                <input type="text" name="defaultValue" placeholder="Default Value">
+                <button type="submit">Create Parameter</button>
+            </form>
+            <ul id="parametersList"></ul>
+        </section>
+
+        <section id="relationships">
+            <h2>Relationships</h2>
+            <form id="createRelationshipForm">
+                <input type="text" name="type" placeholder="Type" required>
+                <button type="submit">Create Relationship</button>
+            </form>
+            <ul id="relationshipsList"></ul>
+        </section>
+
+        <section id="partners">
+            <h2>Partners</h2>
+            <form id="createPartnerForm">
+                <input type="text" name="name" placeholder="Name" required>
+                <button type="submit">Create Partner</button>
+            </form>
+            <ul id="partnersList"></ul>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
