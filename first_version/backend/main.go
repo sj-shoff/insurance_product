@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"gorm.io/driver/mysql"
@@ -69,9 +72,9 @@ func UpdateParameter(db *gorm.DB) http.HandlerFunc {
 
 func DeleteParameter(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var parameter Parameter
-		json.NewDecoder(r.Body).Decode(&parameter)
-		db.Delete(&parameter)
+		vars := mux.Vars(r)
+		id, _ := strconv.ParseUint(vars["id"], 10, 64)
+		db.Delete(&Parameter{}, id)
 		json.NewEncoder(w).Encode("Parameter deleted")
 	}
 }
@@ -104,9 +107,9 @@ func UpdateRelationship(db *gorm.DB) http.HandlerFunc {
 
 func DeleteRelationship(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var relationship Relationship
-		json.NewDecoder(r.Body).Decode(&relationship)
-		db.Delete(&relationship)
+		vars := mux.Vars(r)
+		id, _ := strconv.ParseUint(vars["id"], 10, 64)
+		db.Delete(&Relationship{}, id)
 		json.NewEncoder(w).Encode("Relationship deleted")
 	}
 }
@@ -139,9 +142,9 @@ func UpdatePartner(db *gorm.DB) http.HandlerFunc {
 
 func DeletePartner(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var partner Partner
-		json.NewDecoder(r.Body).Decode(&partner)
-		db.Delete(&partner)
+		vars := mux.Vars(r)
+		id, _ := strconv.ParseUint(vars["id"], 10, 64)
+		db.Delete(&Partner{}, id)
 		json.NewEncoder(w).Encode("Partner deleted")
 	}
 }
@@ -154,22 +157,33 @@ func main() {
 	apiRouter.HandleFunc("/parameters", CreateParameter(db)).Methods("POST")
 	apiRouter.HandleFunc("/parameters", GetParameters(db)).Methods("GET")
 	apiRouter.HandleFunc("/parameters", UpdateParameter(db)).Methods("PUT")
-	apiRouter.HandleFunc("/parameters", DeleteParameter(db)).Methods("DELETE")
+	apiRouter.HandleFunc("/parameters/{id}", DeleteParameter(db)).Methods("DELETE")
 
 	apiRouter.HandleFunc("/relationships", CreateRelationship(db)).Methods("POST")
 	apiRouter.HandleFunc("/relationships", GetRelationships(db)).Methods("GET")
 	apiRouter.HandleFunc("/relationships", UpdateRelationship(db)).Methods("PUT")
-	apiRouter.HandleFunc("/relationships", DeleteRelationship(db)).Methods("DELETE")
+	apiRouter.HandleFunc("/relationships/{id}", DeleteRelationship(db)).Methods("DELETE")
 
 	apiRouter.HandleFunc("/partners", CreatePartner(db)).Methods("POST")
 	apiRouter.HandleFunc("/partners", GetPartners(db)).Methods("GET")
 	apiRouter.HandleFunc("/partners", UpdatePartner(db)).Methods("PUT")
-	apiRouter.HandleFunc("/partners", DeletePartner(db)).Methods("DELETE")
+	apiRouter.HandleFunc("/partners/{id}", DeletePartner(db)).Methods("DELETE")
 
 	// Обработка статических файлов
-	staticDir := http.Dir("./frontend/build/")
-	fs := http.FileServer(staticDir)
-	router.PathPrefix("/").Handler(fs)
+	staticDir := "/home/sj_shoff/insurance_product/first_version/frontend"
+	fs := http.FileServer(http.Dir(staticDir))
+	router.PathPrefix("/").Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		path := filepath.Join(staticDir, r.URL.Path)
+		_, err := os.Stat(path)
+		if os.IsNotExist(err) {
+			http.ServeFile(w, r, filepath.Join(staticDir, "index.html"))
+			return
+		} else if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		fs.ServeHTTP(w, r)
+	}))
 
 	log.Println("Server is running on http://localhost:8000")
 	http.ListenAndServe(":8000", router)
