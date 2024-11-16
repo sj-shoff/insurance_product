@@ -11,7 +11,7 @@ func main() {
 	r := gin.Default()
 
 	// Убедитесь, что путь к шаблонам правильный
-	r.LoadHTMLGlob("templates/*")
+	r.LoadHTMLGlob("4_version/reg/templates/*")
 
 	r.GET("/", server.ShowHomePage)
 	r.GET("/register", server.ShowRegistrationForm)

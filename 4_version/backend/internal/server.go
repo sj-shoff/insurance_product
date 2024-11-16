@@ -26,11 +26,12 @@ func init() {
 func CreateUser(user *entity.User) error {
 	stmt, err := db.Prepare("INSERT INTO users(username, password) VALUES(?, ?)")
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 	defer stmt.Close()
+	fmt.Println("oki")
 	_, err = stmt.Exec(user.Username, user.Password)
+	fmt.Println("NOToki")
 	return err
 }
 
@@ -62,6 +63,7 @@ func RegisterUser(c *gin.Context) {
 
 	// Сохранение пользователя в базе данных
 	if err := CreateUser(&user); err != nil {
+		fmt.Println(err)
 		c.HTML(http.StatusInternalServerError, "register.html", gin.H{"error": "Failed to create user"})
 		return
 	}
