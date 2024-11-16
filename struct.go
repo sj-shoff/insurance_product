@@ -47,6 +47,7 @@ type AllUserProducts struct {
 }
 
 type User struct {
+	ID       uint   `form:"id"`
 	Username string `form:"username"`
 	Password string `form:"password"`
 }

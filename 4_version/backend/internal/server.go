@@ -10,10 +10,73 @@ import (
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/sessions"
 	"golang.org/x/crypto/bcrypt"
 )
 
 var db *sql.DB
+var store = sessions.NewCookieStore([]byte("secret-key"))
+
+func Login() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var user entity.User
+		if err := c.ShouldBindJSON(&user); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+			return
+		}
+
+		// Выполнение SQL-запроса для поиска пользователя
+		var foundUser entity.User
+		query := "SELECT * FROM users WHERE username = ? AND password = ?"
+		row := db.QueryRow(query, user.Username, user.Password)
+
+		// Сканирование результата в foundUser
+		err := row.Scan(&foundUser.ID, &foundUser.Username, &foundUser.Password) // Убедитесь, что поля соответствуют вашей структуре
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+			} else {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+			}
+			return
+		}
+
+		// Здесь вы можете создать сессию или JWT-токен
+
+		session, err := store.Get(c.Request, "session-name")
+		if err != nil {
+			c.JSON(500, gin.H{"error": "Could not get session"})
+			return
+		}
+		userID := foundUser.ID
+		// Сохраняем user_id в сессии
+		session.Values["user_id"] = userID
+		if err := session.Save(c.Request, c.Writer); err != nil {
+			c.JSON(500, gin.H{"error": "Could not save session"})
+			return
+		}
+
+		c.JSON(200, gin.H{"message": "Logged in successfully", "user_id": userID})
+	}
+}
+
+func GetIdOfSession(c *gin.Context) uint {
+	session, err := store.Get(c.Request, "session-name")
+	if err != nil {
+		c.JSON(500, gin.H{"error": "Could not get session"})
+		return 0
+	}
+
+	userID, ok := session.Values["user_id"].(int) // Приводим к правильному типу
+	if !ok {
+		c.JSON(401, gin.H{"error": "Unauthorized"})
+		return 0
+	}
+
+	// Здесь вы можете использовать userID для чего-либо
+	c.JSON(200, gin.H{"message": "Protected data", "user_id": userID})
+	return uint(userID)
+}
 
 func init() {
 	var err error
@@ -75,8 +138,10 @@ func ShowHomePage(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", nil)
 }
 
-func AddNewProductPattern(data_entry []byte, curent_user_id uint) gin.HandlerFunc {
+func AddNewProductPattern(data_entry []byte) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		curent_user_id := GetIdOfSession(ctx)
+
 		last := entity.NewProduct{}
 		json.Unmarshal(data_entry, &last)
 

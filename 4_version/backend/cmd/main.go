@@ -17,6 +17,10 @@ func main() {
 	r.GET("/register", server.ShowRegistrationForm)
 	r.POST("/register", server.RegisterUser)
 
+	//r.GET("/login", server.ShowLoginForm)
+	r.POST("/login", server.Login())
+	
+
 	// Запуск сервера
 	if err := r.Run(":8080"); err != nil {
 		log.Fatal("Ошибка при запуске сервера: ", err)
