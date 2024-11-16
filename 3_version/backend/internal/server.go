@@ -149,6 +149,7 @@ func DeletePartner(db *gorm.DB) http.HandlerFunc {
 func AddNewProductPattern(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// добавить пользователю шаблон для страхового продукта
+
 	}
 }
 

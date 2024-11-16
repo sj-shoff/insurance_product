@@ -1,7 +1,7 @@
 package main
 
 import (
-	server "helloapp/third_version/backend/internal"
+	server "helloapp/3_version/backend/internal"
 	"log"
 	"net/http"
 	"os"
