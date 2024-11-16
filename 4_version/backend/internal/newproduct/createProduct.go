@@ -8,19 +8,17 @@ import (
 	"unicode"
 )
 
-func MakeProductPattern(name string, data_entry []byte) entity.NewProduct {
-	product := entity.NewProduct{
-		ProductName:   name,
-		Product_param: make(map[string]string),
-	}
+func MakeProductPattern(data_entry []byte) entity.NewProduct {
+	product := entity.NewProduct{}
 
-	var data map[string]string
-	err := json.Unmarshal(data_entry, &data)
+	err := json.Unmarshal(data_entry, &product)
 	if err != nil {
 		log.Fatal("Failed unmarshal")
 	}
 
-	product.Product_param = data
+	if product.Product_param == nil {
+		product.Product_param = make(map[string]string)
+	}
 
 	return product
 }

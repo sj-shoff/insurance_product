@@ -38,12 +38,15 @@ type Health struct {
 }
 
 type NewProduct struct {
-	ID            uint              `grom:"primaryKey"`
 	ProductName   string            `gorm:"not null"`
 	Product_param map[string]string `gorn:"not null"`
 }
 
 type AllUserProducts struct {
-	productsPatterns []NewProduct `grom:"productsPatterns"`
-	products         []NewProduct `grom:"products"`
+	Products []NewProduct `json:"products"`
+}
+
+type User struct {
+	Username string `form:"username"`
+	Password string `form:"password"`
 }

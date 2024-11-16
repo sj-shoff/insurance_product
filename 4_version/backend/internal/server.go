@@ -1,166 +1,102 @@
 package server
 
 import (
+	"database/sql"
 	"encoding/json"
+	"fmt"
+	entity "helloapp"
+	"log"
 	"net/http"
-	"strconv"
 
-	"github.com/gorilla/mux"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
+	"golang.org/x/crypto/bcrypt"
 )
 
-type Parameter struct {
-	ID           uint   `gorm:"primaryKey"`
-	Name         string `gorm:"not null"`
-	Type         string `gorm:"not null"`
-	DefaultValue string
-	DictionaryID uint
-}
+var db *sql.DB
 
-type Relationship struct {
-	ID         uint        `gorm:"primaryKey"`
-	Type       string      `gorm:"not null"`
-	Parameters []Parameter `gorm:"many2many:relationship_parameters;"`
-}
-
-type Partner struct {
-	ID         uint        `gorm:"primaryKey"`
-	Name       string      `gorm:"not null"`
-	Parameters []Parameter `gorm:"many2many:partner_parameters;"`
-}
-
-func InitDB() *gorm.DB {
-	dsn := "root:Aesaj2025@tcp(127.0.0.1:3306)/insurance_product?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+func init() {
+	var err error
+	db, err = sql.Open("mysql", "root:111@tcp(localhost)/insurance_product")
 	if err != nil {
-		panic("failed to connect to database")
-	}
-
-	db.AutoMigrate(&Parameter{}, &Relationship{}, &Partner{})
-	return db
-}
-
-func CreateParameter(db *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var parameter Parameter
-		json.NewDecoder(r.Body).Decode(&parameter)
-		db.Create(&parameter)
-		json.NewEncoder(w).Encode(&parameter)
+		log.Fatal(err)
 	}
 }
 
-func GetParameters(db *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var parameters []Parameter
-		db.Find(&parameters)
-		json.NewEncoder(w).Encode(&parameters)
+func CreateUser(user *entity.User) error {
+	stmt, err := db.Prepare("INSERT INTO users(username, password) VALUES(?, ?)")
+	if err != nil {
+		fmt.Println(err)
+		return err
 	}
+	defer stmt.Close()
+	_, err = stmt.Exec(user.Username, user.Password)
+	return err
 }
 
-func UpdateParameter(db *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var parameter Parameter
-		json.NewDecoder(r.Body).Decode(&parameter)
-		db.Save(&parameter)
-		json.NewEncoder(w).Encode(&parameter)
-	}
+func ShowRegistrationForm(c *gin.Context) {
+	c.HTML(http.StatusOK, "register.html", nil)
 }
 
-func DeleteParameter(db *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		vars := mux.Vars(r)
-		id, _ := strconv.ParseUint(vars["id"], 10, 64)
-		db.Delete(&Parameter{}, id)
-		json.NewEncoder(w).Encode("Parameter deleted")
+func RegisterUser(c *gin.Context) {
+	var user entity.User
+
+	if err := c.ShouldBind(&user); err != nil {
+		c.HTML(http.StatusBadRequest, "register.html", gin.H{"error": "Invalid form data"})
+		return
 	}
+
+	// Валидация данных
+	if user.Username == "" || user.Password == "" {
+		c.HTML(http.StatusBadRequest, "register.html", gin.H{"error": "Username and password are required"})
+		return
+	}
+
+	// Хеширование пароля
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "register.html", gin.H{"error": "Failed to hash password"})
+		return
+	}
+	user.Password = string(hashedPassword)
+
+	// Сохранение пользователя в базе данных
+	if err := CreateUser(&user); err != nil {
+		c.HTML(http.StatusInternalServerError, "register.html", gin.H{"error": "Failed to create user"})
+		return
+	}
+
+	c.HTML(http.StatusOK, "register.html", gin.H{"success": "Registration successful"})
 }
 
-func CreateRelationship(db *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var relationship Relationship
-		json.NewDecoder(r.Body).Decode(&relationship)
-		db.Create(&relationship)
-		json.NewEncoder(w).Encode(&relationship)
-	}
+func ShowHomePage(c *gin.Context) {
+	c.HTML(http.StatusOK, "index.html", nil)
 }
 
-func GetRelationships(db *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var relationships []Relationship
-		db.Preload("Parameters").Find(&relationships)
-		json.NewEncoder(w).Encode(&relationships)
-	}
-}
+func AddNewProductPattern(data_entry []byte, curent_user_id uint) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		last := entity.NewProduct{}
+		json.Unmarshal(data_entry, &last)
 
-func UpdateRelationship(db *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var relationship Relationship
-		json.NewDecoder(r.Body).Decode(&relationship)
-		db.Save(&relationship)
-		json.NewEncoder(w).Encode(&relationship)
-	}
-}
+		var AllProducts []byte
+		db.QueryRow("SELECT all_products FROM users WHERE id = ?", curent_user_id).Scan(&AllProducts)
+		var Products []entity.NewProduct
+		json.Unmarshal(AllProducts, &Products)
+		Products = append(Products, last)
+		AllProducts, err := json.Marshal(Products)
+		if err != nil {
+			log.Fatal("failed marshal")
+		}
 
-func DeleteRelationship(db *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		vars := mux.Vars(r)
-		id, _ := strconv.ParseUint(vars["id"], 10, 64)
-		db.Delete(&Relationship{}, id)
-		json.NewEncoder(w).Encode("Relationship deleted")
-	}
-}
+		stmt, err := db.Prepare("INSERT INTO users(new_products, all_products) VALUES(?, ?)")
+		if err != nil {
+			log.Fatal("no db")
+		}
+		defer stmt.Close()
 
-func CreatePartner(db *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var partner Partner
-		json.NewDecoder(r.Body).Decode(&partner)
-		db.Create(&partner)
-		json.NewEncoder(w).Encode(&partner)
-	}
-}
-
-func GetPartners(db *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var partners []Partner
-		db.Preload("Parameters").Find(&partners)
-		json.NewEncoder(w).Encode(&partners)
-	}
-}
-
-func UpdatePartner(db *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var partner Partner
-		json.NewDecoder(r.Body).Decode(&partner)
-		db.Save(&partner)
-		json.NewEncoder(w).Encode(&partner)
-	}
-}
-
-func DeletePartner(db *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		vars := mux.Vars(r)
-		id, _ := strconv.ParseUint(vars["id"], 10, 64)
-		db.Delete(&Partner{}, id)
-		json.NewEncoder(w).Encode("Partner deleted")
-	}
-}
-
-func AddNewProductPattern(db *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		// добавить пользователю шаблон для страхового продукта
-
-	}
-}
-
-func DeleteNewProductPattern(db *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		// удалить пользователю шаблон для страхового продукта
-	}
-}
-
-func AddToAllГUserProducts(db *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		//добавить пользователю новый шаблон, договор
+		_, err = stmt.Exec(data_entry, AllProducts)
+		if err != nil {
+			log.Fatal("bad db")
+		}
 	}
 }
