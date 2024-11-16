@@ -80,7 +80,7 @@ func GetIdOfSession(c *gin.Context) uint {
 
 func init() {
 	var err error
-	db, err = sql.Open("mysql", "root:111@tcp(localhost)/insurance_product")
+	db, err = sql.Open("mysql", "root:Aesaj2025@tcp(localhost)/insurance_product")
 	if err != nil {
 		log.Fatal(err)
 	}

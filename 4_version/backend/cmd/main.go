@@ -19,7 +19,6 @@ func main() {
 
 	//r.GET("/login", server.ShowLoginForm)
 	r.POST("/login", server.Login())
-	
 
 	// Запуск сервера
 	if err := r.Run(":8080"); err != nil {
@@ -28,3 +27,5 @@ func main() {
 
 	log.Println("Сервер запущен на http://localhost:8080")
 }
+
+//запускать через  go run 4_version/backend/cmd/main.go
