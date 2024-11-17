@@ -56,3 +56,22 @@ type User struct {
 	Login    string `gorm:"not null"`
 	Password string `gorm:"not null"`
 }
+
+type Product struct {
+	Name                string
+	StartDate           string
+	EndDate             string
+	UpdateDate          string
+	VersionDescription  string
+	SeriesPrefix        string
+	SeriesPostfix       string
+	NumberPrefix        string
+	NumberPostfix       string
+	Numerator           string
+	CustomNumberMethod  string
+	IndividualParameters []struct {
+		Parameter string
+		Value     string
+	}
+	CostFormula string
+}
