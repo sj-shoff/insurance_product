@@ -190,10 +190,6 @@ func AddNewProductPattern(data_entry []byte) gin.HandlerFunc {
 
 }
 
-const (
-	DATA_FILE = "data.json"
-)
-
 func SaveProductHandler(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var product entity.Product
@@ -226,7 +222,7 @@ func SaveProductHandler(db *sql.DB) gin.HandlerFunc {
 
 func LoadDataFromFile(db *sql.DB, filePath string) error {
 	// Чтение данных из файла
-	data, err := ioutil.ReadFile(DATA_FILE)
+	data, err := ioutil.ReadFile("/home/sj_shoff/insurance_product/4_version/frontend/data.json")
 	if err != nil {
 		return fmt.Errorf("ошибка при чтении файла: %v", err)
 	}

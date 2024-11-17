@@ -1,17 +1,19 @@
 {
-    "productName": "s",
+    "productName": "SASA",
     "startDate": "1111-11-11",
     "endDate": "1111-11-11",
     "updateDate": "1111-11-11",
-    "description": "s",
+    "description": "DF",
     "mandatoryParams": {
-        "prefixSeries": "asf",
-        "postfixSeries": "afsasf",
-        "prefixNumber": "asff",
-        "postfixNumber": "fasasf",
-        "numerator": "fasfas",
-        "customMethod": "asfasf"
+        "prefixSeries": "346",
+        "postfixSeries": "346",
+        "prefixNumber": "346",
+        "postfixNumber": "346",
+        "numerator": "346",
+        "customMethod": "SDG"
     },
-    "costFormula": "asdf",
-    "individualParams": {}
+    "costFormula": "SDGF",
+    "individualParams": {
+        "DSG": "DSG"
+    }
 }
