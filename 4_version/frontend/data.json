@@ -1,19 +1,19 @@
 {
-    "productName": "111",
+    "productName": "Q3WEQWRR",
     "startDate": "0001-01-01",
     "endDate": "0001-01-01",
-    "updateDate": "0001-01-01",
-    "description": "",
+    "updateDate": "",
+    "description": "SDFGHBSDGHSDG",
     "mandatoryParams": {
-        "prefixSeries": "12",
-        "postfixSeries": "12",
-        "prefixNumber": "12",
-        "postfixNumber": "12",
-        "numerator": "12",
-        "customMethod": "12"
+        "prefixSeries": "123",
+        "postfixSeries": "123",
+        "prefixNumber": "123",
+        "postfixNumber": "123",
+        "numerator": "123",
+        "customMethod": "DSFHGDSF"
     },
-    "costFormula": "12",
+    "costFormula": "234513",
     "individualParams": {
-        "12": "12"
+        "3W4TYEWRG": "123"
     }
 }
