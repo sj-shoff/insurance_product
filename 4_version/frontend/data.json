@@ -1,19 +1,20 @@
 {
-    "productName": "SASA",
-    "startDate": "1111-11-11",
-    "endDate": "1111-11-11",
-    "updateDate": "1111-11-11",
-    "description": "DF",
+    "productName": "ghjkl",
+    "startDate": "2222-02-22",
+    "endDate": "3333-03-31",
+    "updateDate": "4444-04-04",
+    "description": "asdfghjkl;'",
     "mandatoryParams": {
-        "prefixSeries": "346",
-        "postfixSeries": "346",
-        "prefixNumber": "346",
-        "postfixNumber": "346",
-        "numerator": "346",
-        "customMethod": "SDG"
+        "prefixSeries": "afdsdghg",
+        "postfixSeries": "agsfdhj",
+        "prefixNumber": "asdfsgd",
+        "postfixNumber": "asdfsg",
+        "numerator": "asdsfgdh",
+        "customMethod": "asfdgfh"
     },
-    "costFormula": "SDGF",
+    "costFormula": "a+b",
     "individualParams": {
-        "DSG": "DSG"
+        "p1": "z1",
+        "p2": "z2"
     }
 }
