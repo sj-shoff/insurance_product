@@ -1,19 +1,19 @@
 {
-    "productName": "Q3WEQWRR",
+    "productName": "sdfsdf",
     "startDate": "0001-01-01",
     "endDate": "0001-01-01",
-    "updateDate": "",
-    "description": "SDFGHBSDGHSDG",
+    "updateDate": "0001-01-01",
+    "description": "sdfsdf",
     "mandatoryParams": {
-        "prefixSeries": "123",
-        "postfixSeries": "123",
-        "prefixNumber": "123",
-        "postfixNumber": "123",
-        "numerator": "123",
-        "customMethod": "DSFHGDSF"
+        "prefixSeries": "2344",
+        "postfixSeries": "235235",
+        "prefixNumber": "23523",
+        "postfixNumber": "235235",
+        "numerator": "235235",
+        "customMethod": "sgdfs"
     },
-    "costFormula": "234513",
+    "costFormula": "235t2t",
     "individualParams": {
-        "3W4TYEWRG": "123"
+        "sdgsdg": "234234"
     }
 }
