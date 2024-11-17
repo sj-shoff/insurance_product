@@ -60,6 +60,25 @@ func Login() gin.HandlerFunc {
 	}
 }
 
+func saveProductHandler(c *gin.Context) {
+	var product entity.Product
+	if err := c.ShouldBindJSON(&product); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+
+	var err error
+	db, err = sql.Open("mysql", "root:Aesaj2025@tcp(127.0.0.1:3306)/new_product")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Здесь вы можете добавить логику для сохранения данных в базу данных или другое хранилище
+	fmt.Printf("Received product: %+v\n", product)
+
+	c.JSON(http.StatusCreated, gin.H{"message": "Product saved successfully"})
+}
+
 func GetIdOfSession(c *gin.Context) uint {
 	session, err := store.Get(c.Request, "session-name")
 	if err != nil {

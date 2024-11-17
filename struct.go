@@ -58,17 +58,17 @@ type User struct {
 }
 
 type Product struct {
-	Name                string
-	StartDate           string
-	EndDate             string
-	UpdateDate          string
-	VersionDescription  string
-	SeriesPrefix        string
-	SeriesPostfix       string
-	NumberPrefix        string
-	NumberPostfix       string
-	Numerator           string
-	CustomNumberMethod  string
+	Name                 string
+	StartDate            string
+	EndDate              string
+	UpdateDate           string
+	VersionDescription   string
+	SeriesPrefix         string
+	SeriesPostfix        string
+	NumberPrefix         string
+	NumberPostfix        string
+	Numerator            string
+	CustomNumberMethod   string
 	IndividualParameters []struct {
 		Parameter string
 		Value     string
