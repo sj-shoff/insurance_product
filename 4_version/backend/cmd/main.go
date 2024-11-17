@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	server "helloapp/4_version/backend/internal"
 	"log"
-	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,15 +12,11 @@ var db *sql.DB
 
 func main() {
 	var err error
-	db, err = sql.Open("mysql", "root:Aesaj2025@tcp(localhost)/insurance_product")
+	db, err = sql.Open("mysql", "root:Aesaj2025@tcp(127.0.0.1:3306)/insurance_product")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	err = server.LoadDataFromFile(db, filepath.Join("/home/sj_shoff/insurance_product/4_version/frontend", "data.json"))
-	if err != nil {
-		log.Fatal("Ошибка при чтении данных из файла: ", err)
-	}
 
 	r := gin.Default()
 	r.LoadHTMLGlob("4_version/reg/templates/*")
