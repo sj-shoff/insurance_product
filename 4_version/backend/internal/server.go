@@ -199,7 +199,7 @@ func SaveProductHandler(db *sql.DB) gin.HandlerFunc {
 		}
 
 		// Преобразуем данные в JSON
-		productJSON, err := json.Marshal(product)
+		productJSON, err := json.Marshal(product.IndividualParameters)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal data"})
 			return
@@ -235,7 +235,7 @@ func LoadDataFromFile(db *sql.DB, filePath string) error {
 	}
 
 	// Преобразуем данные в JSON
-	productJSON, err := json.Marshal(product)
+	productJSON, err := json.Marshal(product.IndividualParameters)
 	if err != nil {
 		return fmt.Errorf("ошибка при маршалинге данных: %v", err)
 	}

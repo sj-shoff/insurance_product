@@ -1,19 +1,19 @@
 {
-    "productName": "sdfsdf",
-    "startDate": "0001-01-01",
-    "endDate": "0001-01-01",
-    "updateDate": "0001-01-01",
-    "description": "sdfsdf",
+    "productName": "SASA",
+    "startDate": "1111-11-11",
+    "endDate": "1111-11-11",
+    "updateDate": "1111-11-11",
+    "description": "DF",
     "mandatoryParams": {
-        "prefixSeries": "2344",
-        "postfixSeries": "235235",
-        "prefixNumber": "23523",
-        "postfixNumber": "235235",
-        "numerator": "235235",
-        "customMethod": "sgdfs"
+        "prefixSeries": "346",
+        "postfixSeries": "346",
+        "prefixNumber": "346",
+        "postfixNumber": "346",
+        "numerator": "346",
+        "customMethod": "SDG"
     },
-    "costFormula": "235t2t",
+    "costFormula": "SDGF",
     "individualParams": {
-        "sdgsdg": "234234"
+        "DSG": "DSG"
     }
 }
