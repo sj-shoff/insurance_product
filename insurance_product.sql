@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost:3306
--- Время создания: Ноя 17 2024 г., 08:40
+-- Время создания: Ноя 17 2024 г., 09:52
 -- Версия сервера: 10.11.8-MariaDB-0ubuntu0.24.04.1
 -- Версия PHP: 8.3.6
 
@@ -96,9 +96,9 @@ INSERT INTO `parameters` (`id`, `name`, `type`, `default_value`, `dictionary_id`
 CREATE TABLE `products` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL,
-  `update_date` date NOT NULL,
+  `start_date` varchar(10) DEFAULT NULL,
+  `end_date` varchar(10) DEFAULT NULL,
+  `update_date` varchar(10) DEFAULT NULL,
   `version_description` text DEFAULT NULL,
   `series_prefix` varchar(255) DEFAULT NULL,
   `series_postfix` varchar(255) DEFAULT NULL,
@@ -109,6 +109,15 @@ CREATE TABLE `products` (
   `individual_parameters` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`individual_parameters`)),
   `cost_formula` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Дамп данных таблицы `products`
+--
+
+INSERT INTO `products` (`id`, `name`, `start_date`, `end_date`, `update_date`, `version_description`, `series_prefix`, `series_postfix`, `number_prefix`, `number_postfix`, `numerator`, `custom_number_method`, `individual_parameters`, `cost_formula`) VALUES
+(1, '', NULL, '', '', '', '', '', '', '', '', '', 'null', ''),
+(2, 'rghfdfh', NULL, '0001-01-01', '0001-01-01', 'sdfhdfhdfh', '1', '2', '3', '4', '5', 'mmmm', '{\"mmmmmmmmmmmmm\":\"46343\",\"mmmmmmmmmmmmmmmmmmmmmmmmmm\":\"465346\"}', '346354674'),
+(3, '34t345', '1111-11-11', '1111-11-11', '1111-11-11', 'sdfsdfsdf', '1', '2', '3', '4', '5', 'sdfgsd', '{\"sdfsdf\":\"12321\"}', '1354132');
 
 -- --------------------------------------------------------
 
@@ -221,7 +230,7 @@ ALTER TABLE `parameters`
 -- AUTO_INCREMENT для таблицы `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
