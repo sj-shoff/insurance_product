@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Information</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <script defer src="script.js"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="flex">
+        <div class="bg-blue-600 text-white w-64 min-h-screen p-4">
+            <div class="mb-8">
+                <img src="https://bivgroup.com/include/logo.png" alt="Логотип" width="150" height="50">
+            </div>
+            <ul>
+                <li class="mb-4"><a href="#" class="hover:underline">Конструктор продуктов</a></li>
+                <li class="mb-4"><a href="#" class="hover:underline">Реестр договоров</a></li>
+                <li class="mb-4"><a href="#" class="hover:underline">Сервис печати</a></li>
+                <li class="mb-4"><a href="#" class="hover:underline">Сервис расчетов</a></li>
+            </ul>
+        </div>
+        <div class="flex-1 p-8">
+            <div class="flex justify-between items-center mb-8 border-b-2 border-gray-300 pb-4">
+                <div class="flex space-x-8 text-lg">
+                    <a href="#" class="text-gray-700 hover:underline">Основная информация</a>
+                    <a href="#" class="text-gray-700 hover:underline">Дополнительные настройки</a>
+                    <a href="#" class="text-gray-700 hover:underline">Особые условия</a>
+                    <a href="#" class="text-gray-700 hover:underline">Печать договора</a>
+                </div>
+                <div class="flex space-x-4 items-center">
+                    <a href="#" class="text-gray-700 hover:underline">Личный кабинет</a>
+                    <button class="bg-red-500 text-white px-4 py-2 rounded">Выход</button>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg mb-8 border border-gray-300">
+                <h2 class="text-xl font-bold mb-4">Данные о продукте</h2>
+                <div class="grid grid-cols-3 gap-4">
+                    <input type="text" placeholder="Наименование продукта" class="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-500 col-span-1">
+                    <div class="flex space-x-4 col-span-2">
+                        <div class="flex-1">
+                            <label class="block text-gray-700">Начало эксплуатации</label>
+                            <input type="date" class="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-500 w-full">
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-gray-700">Окончание эксплуатации</label>
+                            <input type="date" class="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-500 w-full">
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-gray-700">Дата обновления</label>
+                            <input type="date" class="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-500 w-full">
+                        </div>
+                    </div>
+                    <textarea placeholder="Описание версии" class="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-500 col-span-3 h-24"></textarea>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg mb-8 border border-gray-300">
+                <h2 class="text-xl font-bold mb-4">Обязательные параметры</h2>
+                <div class="bg-gray-100 p-4 rounded-lg mb-4 border border-gray-300">
+                    <h3 class="text-lg font-bold mb-4">Серия и номер полиса</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <input type="text" placeholder="Префикс серии" class="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-500">
+                        <input type="text" placeholder="Постфикс серии" class="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-500">
+                        <input type="text" placeholder="Префикс номера" class="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-500">
+                        <input type="text" placeholder="Постфикс номера" class="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <input type="text" placeholder="Нумератор" class="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-500 mb-4 w-full">
+                    <input type="text" placeholder="Метод кастомного регулирования номера договора" class="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-500 w-full">
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg mb-8 border border-gray-300">
+                <h2 class="text-xl font-bold mb-4">Индивидуальные параметры</h2>
+                <form id="parameters-container">
+                    <template id="parameter-template">
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <input type="text" name="parameter[]" placeholder="Параметр" class="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-500">
+                            <input type="text" name="value[]" placeholder="Значение параметра" class="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </template>
+                    <button type="button" onclick="addParameter()" class="bg-gray-200 text-gray-700 p-2 rounded hover:bg-gray-300 mb-4">Добавить параметр</button>
+                </form>
+            </div>
+            <div class="bg-white p-6 rounded-lg mb-8 border border-gray-300">
+                <input type="text" placeholder="Формула для расчета стоимости" class="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-500 w-full">
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button class="bg-gray-200 text-gray-700 p-2 rounded hover:bg-gray-300" onclick="clearForms()">Очистить</button>
+                <button class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600" onclick="saveData()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

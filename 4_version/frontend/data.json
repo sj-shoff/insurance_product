@@ -1,0 +1,20 @@
+{
+    "productName": "denis",
+    "startDate": "11111-11-11",
+    "endDate": "0222-02-22",
+    "updateDate": "3333-03-31",
+    "description": "sosal",
+    "mandatoryParams": {
+        "prefixSeries": "gjfghf",
+        "postfixSeries": "cffh",
+        "prefixNumber": "",
+        "postfixNumber": "",
+        "numerator": "",
+        "customMethod": ""
+    },
+    "costFormula": "for",
+    "individualParams": {
+        "p1": "z1",
+        "p2": "z2"
+    }
+}
