@@ -1,20 +1,17 @@
 {
-    "productName": "denis",
-    "startDate": "11111-11-11",
-    "endDate": "0222-02-22",
-    "updateDate": "3333-03-31",
-    "description": "sosal",
+    "productName": "s",
+    "startDate": "1111-11-11",
+    "endDate": "1111-11-11",
+    "updateDate": "1111-11-11",
+    "description": "s",
     "mandatoryParams": {
-        "prefixSeries": "gjfghf",
-        "postfixSeries": "cffh",
-        "prefixNumber": "",
-        "postfixNumber": "",
-        "numerator": "",
-        "customMethod": ""
+        "prefixSeries": "asf",
+        "postfixSeries": "afsasf",
+        "prefixNumber": "asff",
+        "postfixNumber": "fasasf",
+        "numerator": "fasfas",
+        "customMethod": "asfasf"
     },
-    "costFormula": "for",
-    "individualParams": {
-        "p1": "z1",
-        "p2": "z2"
-    }
+    "costFormula": "asdf",
+    "individualParams": {}
 }

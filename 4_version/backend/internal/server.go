@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	entity "helloapp"
+	"io/ioutil"
+
 	"log"
 	"net/http"
 
@@ -185,4 +187,72 @@ func AddNewProductPattern(data_entry []byte) gin.HandlerFunc {
 			log.Fatal("bad db")
 		}
 	}
+
+}
+
+const (
+	DATA_FILE = "data.json"
+)
+
+func SaveProductHandler(db *sql.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var product entity.Product
+		if err := c.ShouldBindJSON(&product); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+			return
+		}
+
+		// Преобразуем данные в JSON
+		productJSON, err := json.Marshal(product)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal data"})
+			return
+		}
+
+		// Сохраняем данные в базу данных
+		query := `
+			INSERT INTO products (name, start_date, end_date, update_date, version_description, series_prefix, series_postfix, number_prefix, number_postfix, numerator, custom_number_method, individual_parameters, cost_formula)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		`
+		_, err = db.Exec(query, product.Name, product.StartDate, product.EndDate, product.UpdateDate, product.VersionDescription, product.SeriesPrefix, product.SeriesPostfix, product.NumberPrefix, product.NumberPostfix, product.Numerator, product.CustomNumberMethod, productJSON, product.CostFormula)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save data"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": "Data saved successfully"})
+	}
+}
+
+func LoadDataFromFile(db *sql.DB, filePath string) error {
+	// Чтение данных из файла
+	data, err := ioutil.ReadFile(DATA_FILE)
+	if err != nil {
+		return fmt.Errorf("ошибка при чтении файла: %v", err)
+	}
+
+	// Декодирование JSON-данных
+	var product entity.Product
+	err = json.Unmarshal(data, &product)
+	if err != nil {
+		return fmt.Errorf("ошибка при декодировании JSON: %v", err)
+	}
+
+	// Преобразуем данные в JSON
+	productJSON, err := json.Marshal(product)
+	if err != nil {
+		return fmt.Errorf("ошибка при маршалинге данных: %v", err)
+	}
+
+	// Сохраняем данные в базу данных
+	query := `
+		INSERT INTO products (name, start_date, end_date, update_date, version_description, series_prefix, series_postfix, number_prefix, number_postfix, numerator, custom_number_method, individual_parameters, cost_formula)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+	`
+	_, err = db.Exec(query, product.Name, product.StartDate, product.EndDate, product.UpdateDate, product.VersionDescription, product.SeriesPrefix, product.SeriesPostfix, product.NumberPrefix, product.NumberPostfix, product.Numerator, product.CustomNumberMethod, productJSON, product.CostFormula)
+	if err != nil {
+		return fmt.Errorf("ошибка при сохранении данных в базу данных: %v", err)
+	}
+
+	return nil
 }
