@@ -1,19 +1,19 @@
 {
-    "productName": "3twewegtwe",
-    "startDate": "0001-01-01",
-    "endDate": "0001-01-01",
-    "updateDate": "0001-01-01",
-    "description": "fdhdfhdfh",
+    "productName": "34234",
+    "startDate": "2333-02-11",
+    "endDate": "2223-02-11",
+    "updateDate": "3222-02-23",
+    "description": "dsfsd",
     "mandatoryParams": {
-        "prefixSeries": "124213",
-        "postfixSeries": "235235",
-        "prefixNumber": "235235",
-        "postfixNumber": "235235",
-        "numerator": "23523523",
-        "customMethod": "235325"
+        "prefixSeries": "1",
+        "postfixSeries": "2",
+        "prefixNumber": "3",
+        "postfixNumber": "4",
+        "numerator": "5",
+        "customMethod": "dfhdfh"
     },
-    "costFormula": "zdfexhzdfgjzdfgjh",
+    "costFormula": "132531",
     "individualParams": {
-        "235235": "235235"
+        "sgsdg": "12321"
     }
 }

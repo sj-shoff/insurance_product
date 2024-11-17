@@ -174,38 +174,13 @@ func AddNewProductPattern(data_entry []byte) gin.HandlerFunc {
 
 func SaveProductHandler(db *sql.DB) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var product entity.Product
-		if err := ctx.ShouldBindJSON(&product); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
-			return
-		}
-
-		// Преобразуем данные в JSON
-		productJSON, err := json.Marshal(product.IndividualParameters)
-		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal data"})
-			return
-		}
-
-		// Сохраняем данные в базу данных
-		query := `
-			INSERT INTO products (name, start_date, end_date, update_date, version_description, series_prefix, series_postfix, number_prefix, number_postfix, numerator, custom_number_method, individual_parameters, cost_formula)
-			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-		`
-		_, err = db.Exec(query, product.Name, product.StartDate, product.EndDate, product.UpdateDate, product.VersionDescription,
-			product.MandatoryParams.SeriesPrefix, product.MandatoryParams.SeriesPostfix, product.MandatoryParams.NumberPrefix,
-			product.MandatoryParams.NumberPostfix, product.MandatoryParams.Numerator, product.MandatoryParams.CustomNumberMethod,
-			productJSON, product.CostFormula)
-		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save data"})
-			return
-		}
-
+		LoadDataFromFile(db, " ")
 		ctx.JSON(http.StatusOK, gin.H{"message": "Data saved successfully"})
 	}
+
 }
 
-func LoadDataFromFile(db *sql.DB) error {
+func LoadDataFromFile(db *sql.DB, filePath string) error {
 	// Чтение данных из файла
 	data, err := os.ReadFile("/home/sj_shoff/insurance_product/4_version/frontend/data.json")
 	if err != nil {
@@ -227,14 +202,13 @@ func LoadDataFromFile(db *sql.DB) error {
 
 	// Сохраняем данные в базу данных
 	query := `
-		INSERT INTO products (name, start_date, end_date, update_date, version_description, series_prefix, series_postfix, number_prefix, number_postfix, numerator, custom_number_method, individual_parameters, cost_formula)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-	`
+        INSERT INTO products (name, start_date, end_date, update_date, version_description, series_prefix, series_postfix, number_prefix, number_postfix, numerator, custom_number_method, individual_parameters, cost_formula)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `
 	_, err = db.Exec(query, product.Name, product.StartDate, product.EndDate, product.UpdateDate, product.VersionDescription,
 		product.MandatoryParams.SeriesPrefix, product.MandatoryParams.SeriesPostfix, product.MandatoryParams.NumberPrefix,
 		product.MandatoryParams.NumberPostfix, product.MandatoryParams.Numerator, product.MandatoryParams.CustomNumberMethod,
 		productJSON, product.CostFormula)
-	fmt.Println(product.Name)
 	if err != nil {
 		return fmt.Errorf("ошибка при сохранении данных в базу данных: %v", err)
 	}

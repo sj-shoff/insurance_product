@@ -58,21 +58,20 @@ type User struct {
 }
 
 type Product struct {
-	Name                 string                 `json:"name"`
-	StartDate            string                 `json:"start_date"`
-	EndDate              string                 `json:"end_date"`
-	UpdateDate           string                 `json:"update_date"`
-	VersionDescription   string                 `json:"version_description"`
-	MandatoryParams      MandatoryParams        `json:"mandatory_params"`
-	IndividualParameters map[string]interface{} `json:"individual_parameters"`
-	CostFormula          string                 `json:"cost_formula"`
-}
+	Name               string `json:"productName"`
+	StartDate          string `json:"startDate"`
+	EndDate            string `json:"endDate"`
+	UpdateDate         string `json:"updateDate"`
+	VersionDescription string `json:"description"`
+	MandatoryParams    struct {
+		SeriesPrefix       string `json:"prefixSeries"`
+		SeriesPostfix      string `json:"postfixSeries"`
+		NumberPrefix       string `json:"prefixNumber"`
+		NumberPostfix      string `json:"postfixNumber"`
+		Numerator          string `json:"numerator"`
+		CustomNumberMethod string `json:"customMethod"`
+	} `json:"mandatoryParams"`
 
-type MandatoryParams struct {
-	SeriesPrefix       string `json:"series_prefix"`
-	SeriesPostfix      string `json:"series_postfix"`
-	NumberPrefix       string `json:"number_prefix"`
-	NumberPostfix      string `json:"number_postfix"`
-	Numerator          string `json:"numerator"`
-	CustomNumberMethod string `json:"custom_number_method"`
+	IndividualParameters map[string]string `json:"individualParams"`
+	CostFormula          string
 }
