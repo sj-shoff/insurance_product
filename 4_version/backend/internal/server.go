@@ -210,7 +210,7 @@ func SaveProductHandler(db *sql.DB) gin.HandlerFunc {
 			INSERT INTO products (name, start_date, end_date, update_date, version_description, series_prefix, series_postfix, number_prefix, number_postfix, numerator, custom_number_method, individual_parameters, cost_formula)
 			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 		`
-		_, err = db.Exec(query, product.Name, product.StartDate, product.EndDate, product.UpdateDate, product.VersionDescription, product.MandatoryParams, productJSON, product.CostFormula)
+		_, err = db.Exec(query, product.Name, product.StartDate, product.EndDate, product.UpdateDate, product.VersionDescription, product.MandatoryParams.SeriesPrefix, product.MandatoryParams.SeriesPostfix, product.MandatoryParams.NumberPrefix, product.MandatoryParams.NumberPostfix, product.MandatoryParams.Numerator, product.MandatoryParams.CustomNumberMethod, productJSON, product.CostFormula)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save data"})
 			return
@@ -245,7 +245,7 @@ func LoadDataFromFile(db *sql.DB, filePath string) error {
 		INSERT INTO products (name, start_date, end_date, update_date, version_description, series_prefix, series_postfix, number_prefix, number_postfix, numerator, custom_number_method, individual_parameters, cost_formula)
 		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 	`
-	_, err = db.Exec(query, product.Name, product.StartDate, product.EndDate, product.UpdateDate, product.VersionDescription, product.MandatoryParams, productJSON, product.CostFormula)
+	_, err = db.Exec(query, product.Name, product.StartDate, product.EndDate, product.UpdateDate, product.VersionDescription, product.MandatoryParams.SeriesPrefix, product.MandatoryParams.SeriesPostfix, product.MandatoryParams.NumberPrefix, product.MandatoryParams.NumberPostfix, product.MandatoryParams.Numerator, product.MandatoryParams.CustomNumberMethod, productJSON, product.CostFormula)
 	if err != nil {
 		return fmt.Errorf("ошибка при сохранении данных в базу данных: %v", err)
 	}
